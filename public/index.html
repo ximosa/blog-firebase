@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Blog Simple</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://cdn.tiny.cloud/1/3usygobdfx9bftjb5lcoifohnglr1mqy8q67y1k5z5usgcvi/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <style>
+        .post-content { display: none; }
+        .edit-buttons { display: none; }
+        body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+ 
+}
+nav select {
+  max-width: 200px;
+}
+
+header {
+  margin-top: 50px;
+    padding: 20px;
+}
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #333; /* Fondo del nav */
+}
+
+.navbar-brand {
+    font-size: 24px; /* Tamaño de la fuente del h1 */
+    color: white; /* Color del texto del h1 */
+    margin: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.nav-menu {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu li {
+    margin-left: 20px;
+}
+.nav-menu li:last-child {
+    margin-right: 20px; /* Ajusta el valor según el espacio que necesites */
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+nav {
+    margin-bottom: 20px;
+}
+.boton-como-enlace {
+    background: none;
+    border: none;
+    color: #333;
+    text-decoration: underline;
+    cursor: pointer;
+}
+button, select {
+    background-color: #021827;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-right: 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover, select:hover {
+    background-color: #8cc1e4;
+}
+
+#postForm {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+input[type="text"], select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.post {
+    max-width: 600PX;
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(218, 217, 205, 0.869);
+}
+
+.post h2 {
+    color: #2c3e50;
+    margin-top: 0;
+}
+
+.post-content {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.edit-buttons {
+    margin-top: 15px;
+}
+
+#pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#pagination button {
+    background-color: #ecf0f1;
+    color: #333;
+    margin: 0 5px;
+}
+
+#pagination button:hover {
+    background-color: #bdc3c7;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+    
+    button, select {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+/* Estilos para el overlay de pantalla completa */
+.overlay {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgb(0, 0, 0); /* Fondo oscuro con opacidad */
+    overflow-y: auto; /* Permitir scroll si el contenido es largo */
+    display: none; /* Oculto por defecto */
+    z-index: 1000; /* Asegurar que está por encima de otros elementos */
+}
+
+.overlay-content {
+    position: relative;
+    top: 10%;
+    width: 80%;
+    margin: auto;
+    text-align: left;
+    color: white;
+    padding: 20px;
+    line-height: 1.8;
+}
+
+.overlay h2 {
+    margin-bottom: 20px;
+}
+
+.overlay .closebtn {
+    position: absolute;
+    top: 20px;
+    right: 45px;
+    font-size: 60px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.overlay .closebtn:hover {
+    color: #bbb;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 600px) {
+    .overlay-content {
+        width: 100%;
+    }
+
+    .overlay .closebtn {
+        top: 15px;
+        right: 25px;
+        font-size: 40px;
+    }
+}
+/* Estilos para pantallas móviles */
+@media (max-width: 768px) {
+    nav {
+        position: relative;
+}
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .nav-menu {
+        flex-direction: column;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .nav-menu li {
+        margin-left: 0;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .nav-menu li:last-child {
+        margin-right: 0;
+    }
+
+    .navbar-brand {
+        text-align: center;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    button {
+        width: 100%;
+        text-align: left;
+        padding: 10px;
+    }
+}
+    </style>
+</head>
+<body>
+ 
+        <nav class="navbar">
+            <h1 class="navbar-brand">Webgae</h1>
+            <ul class="nav-menu">
+                <Li><select id="categoryFilter">
+                <option value="">Categorías</option>
+            </select></Li>
+                <Li><button id="loginBtn">Iniciar sesión</button></Li>
+                <Li><button id="logoutBtn" style="display: none;">Cerrar sesión</button></Li>
+                <Li><button id="newPostBtn" style="display: none;">Nuevo Post</button></Li>
+                
+        </ul>
+        </nav>
+   <header></header>
+
+    <main>
+        <div id="postForm" style="display: none;">
+            <h2>Nuevo Post</h2>
+            <form id="newPostForm">
+                <input type="text" id="postTitle" placeholder="Título" required>
+                <select id="postCategory" required>
+                    <option value="">Selecciona una categoría</option>
+                    <option value="tecnologia">Tecnología</option>
+                    <option value="ciencia">Ciencia</option>
+                    <option value="cultura">Cultura</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <textarea id="postContent"></textarea>
+                <button type="submit">Publicar</button>
+                <button type="button" id="cancelPost">Cancelar</button>
+            </form>
+        </div>
+
+        <div id="posts"></div>
+        <div id="pagination"></div>
+    </main>
+    <div id="postOverlay" class="overlay">
+        <a href="javascript:void(0)" class="closebtn" id="closeOverlay">&times;</a>
+        <div class="overlay-content" id="overlayContent"></div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
