@@ -1,12 +1,12 @@
 // Configuración de Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyBzB7rohmLccBZbhJT0oal1ih5xjgLOdqc",
-    authDomain: "email-3426a.firebaseapp.com",
-    databaseURL: "https://email-3426a.firebaseio.com",
-    projectId: "email-3426a",
-    storageBucket: "email-3426a.appspot.com",
-    messagingSenderId: "783697482923",
-    appId: "1:783697482923:web:bec9689eb5f651345893ee"
+    apiKey: "",
+    authDomain: "",
+    databaseURL: "",
+    projectId: "",
+    storageBucket: "",
+    messagingSenderId: "",
+    appId: ""
   };
 
 firebase.initializeApp(firebaseConfig);
